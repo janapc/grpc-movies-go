@@ -1,0 +1,47 @@
+syntax = "proto3";
+package pb;
+option go_package = "internal/pb";
+
+message Movie {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string image_url = 4;
+}
+
+message SaveMovieRequest {
+  string title = 1;
+  string description = 2;
+  string image_url = 3;
+}
+
+message UpdateMovieRequest {
+  string id = 1;
+  optional string title = 2;
+  optional string description = 3;
+  optional string image_url = 4;
+}
+
+message OnlyIdMovie {
+  string id = 1;
+}
+
+message BlankMovie {}
+
+message Movies {
+  repeated Movie movies = 1;
+}
+
+message IdsMovies {
+  repeated OnlyIdMovie movies = 1;
+}
+
+service MovieService {
+  rpc SaveMovie(SaveMovieRequest) returns (Movie) {}
+  rpc SaveManyMovies(stream SaveMovieRequest) returns (stream Movie) {}
+  rpc UpdateMovie(UpdateMovieRequest) returns (Movie) {}
+  rpc DeleteMovie(OnlyIdMovie) returns (OnlyIdMovie) {}
+  rpc DeleteManyMovies(stream OnlyIdMovie) returns (IdsMovies) {}
+  rpc FindMovieById(OnlyIdMovie) returns (Movie) {}
+  rpc AllMovies(BlankMovie) returns (Movies) {}
+}
